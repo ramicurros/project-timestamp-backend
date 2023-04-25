@@ -14,25 +14,29 @@ app.use(cors({ optionsSuccessStatus: 200 }));  // some legacy browsers choke on 
 app.use(express.static('public'));
 
 // http://expressjs.com/en/starter/basic-routing.html
-app.get("/", function(req, res) {
+app.get("/", function (req, res) {
   res.sendFile(__dirname + '/views/index.html');
 });
 
 
 // your first API endpoint... 
 app.get("/api/:date?", (req, res) => {
-  let dateObj = new Date(req.params.date);
-  if(dateObj.toUTCString() === 'Invalid Date') dateObj = new Date(+req.params.date);
-  if (dateObj instanceof Date && !isNaN(req.params.date)) {
-      res.json({unix: dateObj.getTime(), utc: dateObj.toUTCString()});
-  } else {
+  if (req.params.date) {
+    let dateObj = new Date(req.params.date);
+    if (dateObj.toUTCString() === 'Invalid Date') dateObj = new Date(+req.params.date);
+    if (dateObj instanceof Date && !isNaN(req.params.date)) {
+      res.json({ unix: dateObj.getTime(), utc: dateObj.toUTCString() });
+    } else {
       res.json({ error: "Invalid Date" })
+    }
+  } else {
+    res.json({ unix: new Date().getTime(), utc: new Date().toUTCString() })
   }
 });
 
 
 
 // listen for requests :)
-var listener = app.listen(process.env.PORT, function() {
+var listener = app.listen(process.env.PORT, function () {
   console.log('Your app is listening on port ' + listener.address().port);
 });
