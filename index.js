@@ -6,9 +6,19 @@ var express = require('express');
 var app = express();
 
 app.get("/api/:date?", (req, res) => {
+  let dateObj;
   if (req.params.date) {
-    if (typeof req.params.date === 'string') {
-      let dateObj = new Date(req.params.date);
+    if (typeof req.params.date === 'string' || typeof req.params.date === 'number') {
+      if (typeof req.params.date === 'string') {
+        dateObj = new Date(req.params.date);
+      }
+      if (typeof req.params.date === 'number') {
+        if (req.params.date.length === 13) {
+          dateObj = new Date(req.params.date * 1000);
+        } else if (req.params.date.length === 10) {
+          dateObj = new Date(req.params.date);
+        }
+      }
       if (dateObj instanceof Date && !isNaN(x)) {
         res.json({ unix: Math.floor(Date.parse(dateObj.toString()) / 1000), utc: dateObj.toString() })
       } else {
@@ -24,8 +34,7 @@ app.get("/api/:date?", (req, res) => {
     let unixNow = Math.floor(Date.now() / 1000);
     let now = new Date().toString();
     res.json({ unix: unixNow, utc: now });
-  }   
-
+  }
 })
 
 // enable CORS (https://en.wikipedia.org/wiki/Cross-origin_resource_sharing)
