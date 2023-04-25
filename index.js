@@ -19,13 +19,13 @@ app.get("/api/:date?", (req, res) => {
           dateObj = new Date(req.params.date);
         }
       }
-      if (dateObj instanceof Date && !isNaN(x)) {
+      if (dateObj instanceof Date && !isNaN(req.params.date)) {
         res.json({ unix: Math.floor(Date.parse(dateObj.toString()) / 1000), utc: dateObj.toString() })
       } else {
         res.json({ error: "Invalid Date" })
       }
     }
-    if (req.params.date instanceof Date && !isNaN(x)) {
+    if (req.params.date instanceof Date && !isNaN(req.params.date)) {
       res.json({ unix: Math.floor(Date.parse(req.params.date.toString()) / 1000), utc: req.params.date.toString() })
     } else {
       res.json({ error: "Invalid Date" })
